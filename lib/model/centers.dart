@@ -14,11 +14,11 @@ class CenterResponse {
     this.ttl,
   });
 
-  List<Center> centers;
+  List<CenterData> centers;
   int ttl;
 
   factory CenterResponse.fromJson(Map<String, dynamic> json) => CenterResponse(
-    centers: List<Center>.from(json["centers"].map((x) => Center.fromJson(x))),
+    centers: List<CenterData>.from(json["centers"].map((x) => CenterData.fromJson(x))),
     ttl: json["ttl"],
   );
 
@@ -28,8 +28,8 @@ class CenterResponse {
   };
 }
 
-class Center {
-  Center({
+class CenterData {
+  CenterData({
     this.centerId,
     this.name,
     this.districtName,
@@ -51,7 +51,7 @@ class Center {
   String lat;
   String long;
 
-  factory Center.fromJson(Map<String, dynamic> json) => Center(
+  factory CenterData.fromJson(Map<String, dynamic> json) => CenterData(
     centerId: json["center_id"],
     name: json["name"],
     districtName: districtNameValues.map[json["district_name"]],
