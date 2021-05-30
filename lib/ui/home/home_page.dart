@@ -1,8 +1,12 @@
+import 'package:findmyshot/model/centers.dart';
 import 'package:findmyshot/util/constant.dart';
 import 'package:findmyshot/util/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
+import '../../data/api/api_provider.dart';
 
 class HomePage extends StatefulWidget {
   static const TAG = 'HomePageTag';
@@ -156,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
                 onPressed: () {
-
+                  _getNearestCentres(_currentLat, _currentLong);
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -199,19 +203,25 @@ class _HomePageState extends State<HomePage> {
       _currentLat = userLocation.latitude;
       _currentLong = userLocation.longitude;
     });
-    await _getNearestCentres();
+    await _getNearestCentres(_currentLat,_currentLong);
   }
 
-  Future<void> _getNearestCentres() async {
+  Future<void> _getNearestCentres(double lat, double long) async {
     setState(() {
       _isNewLocation = true;
     });
 
     //Do API call and other stuffs
-
-    setState(() {
-      _isNewLocation = false;
-    });
+    http.Response response = await ApiProvider.instance.getCenterByLocation(28.6293432, 77.3530757);
+    if(response.statusCode==200){
+      final _pref = await SharedPreferences.getInstance();
+      _pref.setString(Constant.NEARBY_CENTERS, response.body);
+     /*final centers = centerResponseFromJson(_pref.getString(Constant.NEARBY_CENTERS)).centers;
+     print(centers.length);*/
+      setState(() {
+        _isNewLocation = false;
+      });
+    }
     return;
   }
 }
