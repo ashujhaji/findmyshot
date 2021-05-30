@@ -14,12 +14,12 @@ class Alert {
     this.qtyDose2,
   });
 
-  List<dynamic> districtId;
-  String vaccine;
-  String price;
-  String age;
-  int qtyDose1;
-  int qtyDose2;
+  List<int> districtId = [];
+  String vaccine = 'Covishield';
+  String price = 'All';
+  String age = 'All';
+  int qtyDose1 = 0;
+  int qtyDose2 = 0;
 
   factory Alert.fromJson(Map<String, dynamic> json) => Alert(
     districtId: List<dynamic>.from(json["district_id"].map((x) => x)),
@@ -31,7 +31,7 @@ class Alert {
   );
 
   Map<String, dynamic> toJson() => {
-    "district_id": List<dynamic>.from(districtId.map((x) => x)),
+    "district_id": List<int>.from(districtId.map((x) => x)),
     "vaccine": vaccine,
     "price": price,
     "age": age,

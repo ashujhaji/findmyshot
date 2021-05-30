@@ -43,8 +43,8 @@ class CenterData {
 
   int centerId;
   String name;
-  DistrictName districtName;
-  StateName stateName;
+  String districtName;
+  String stateName;
   String location;
   String pincode;
   String blockName;
@@ -54,8 +54,8 @@ class CenterData {
   factory CenterData.fromJson(Map<String, dynamic> json) => CenterData(
     centerId: json["center_id"],
     name: json["name"],
-    districtName: districtNameValues.map[json["district_name"]],
-    stateName: stateNameValues.map[json["state_name"]],
+    districtName: json["district_name"],
+    stateName: json["state_name"],
     location: json["location"],
     pincode: json["pincode"],
     blockName: json["block_name"],
