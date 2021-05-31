@@ -32,7 +32,6 @@ dependencies:
   location: ^3.0.0
   http: ^0.12.0+1
   geocoder: ^0.2.1
-  workmanager: ^0.4.0
   flutter_local_notifications: ^1.4.4+1
 
 dev_dependencies:

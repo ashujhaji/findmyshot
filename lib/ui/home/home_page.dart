@@ -1,15 +1,18 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:findmyshot/model/alert.dart';
 import 'package:findmyshot/model/centers.dart';
 import 'package:findmyshot/ui/home/home_repo.dart';
 import 'package:findmyshot/util/constant.dart';
 import 'package:findmyshot/util/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 import '../../data/api/api_provider.dart';
 import '../../model/centers.dart';
@@ -74,7 +77,6 @@ class _HomePageState extends State<HomePage> {
         });
       });
     }
-    Workmanager().initialize(callbackDispatcher);
 
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -85,17 +87,14 @@ class _HomePageState extends State<HomePage> {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static void callbackDispatcher() {
-    Workmanager().executeTask((task, inputData) async {
-      switch (task) {
-        case PERIODIC_TASK:
-          print('task triggered');
-          HomeRepo.instance.findSlot(flutterLocalNotificationsPlugin);
-          break;
-      }
-
-      return Future.value(true);
-    });
+  void startServiceInPlatform() async{
+    if(Platform.isAndroid){
+      var methodChannel = MethodChannel('in.pixerapps.findmyshot');
+      var data = await methodChannel.invokeMethod('startService');
+      Timer.periodic(Duration(seconds: 1), (Timer t) {
+        HomeRepo.instance.findSlot(flutterLocalNotificationsPlugin);
+      });
+    }
   }
 
   @override
@@ -415,12 +414,13 @@ class _HomePageState extends State<HomePage> {
                     EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
                 onPressed: () {
                   _createNewAlert().then((value) {
-                    Workmanager().registerPeriodicTask(
+                    /*Workmanager().registerPeriodicTask(
                       "3",
                       PERIODIC_TASK,
                       initialDelay: Duration(seconds: 10),
                       frequency: Duration(minutes: 30),
-                    );
+                    );*/
+                    startServiceInPlatform();
                   });
                 },
                 shape: RoundedRectangleBorder(
@@ -585,7 +585,7 @@ class _HomePageState extends State<HomePage> {
 
     //Do API call and other stuffs
     http.Response response =
-        await ApiProvider.instance.getCenterByLocation(28.6293432, 77.3530757);
+        await ApiProvider.instance.getCenterByLocation(lat, long);
     if (response.statusCode == 200) {
       final _pref = await SharedPreferences.getInstance();
       _pref.setString(Constant.NEARBY_CENTERS, response.body);
