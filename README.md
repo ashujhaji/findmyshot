@@ -1,16 +1,26 @@
-# findmyshot
+# Find My Shot
 
-A new Flutter application.
+This is an open source project to find your nearby vaccination center. You can easily create an alert system which will notify you whenever there is an availability of vaccine in your nearby vaccination center.
 
-## Getting Started
+## Download link
 
-This project is a starting point for a Flutter application.
+This application supports both Android and IOS. But for now Android user can get the app link.
 
-A few resources to get you started if this is your first Flutter project:
+Android App link:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- [Download here](https://drive.google.com/file/d/1Z3i0BhjPY611QxCqrzRqJ319nqpFf6NG/view?usp=sharing)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a small contribution towards open source community.
+
+
+## Requirements to use
+
+To make the app work seamlessly, you should:
+
+```bash
+Let the app run in background, if your android version >= Oreo
+```
+
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
