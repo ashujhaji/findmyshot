@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     if(Platform.isAndroid){
       var methodChannel = MethodChannel('in.pixerapps.findmyshot');
       var data = await methodChannel.invokeMethod('startService');
-      Timer.periodic(Duration(seconds: 1), (Timer t) {
+      Timer.periodic(Duration(minutes: 60), (Timer t) {
         HomeRepo.instance.findSlot(flutterLocalNotificationsPlugin);
       });
     }
@@ -585,7 +585,7 @@ class _HomePageState extends State<HomePage> {
 
     //Do API call and other stuffs
     http.Response response =
-        await ApiProvider.instance.getCenterByLocation(lat, long);
+        await ApiProvider.instance.getCenterByLocation(lat,long);
     if (response.statusCode == 200) {
       final _pref = await SharedPreferences.getInstance();
       _pref.setString(Constant.NEARBY_CENTERS, response.body);
