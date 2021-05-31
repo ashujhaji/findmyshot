@@ -11,7 +11,7 @@ class HomeRepo {
   static final HomeRepo instance = HomeRepo._privateConstructor();
 
   Future<List<int>> getDistrictIds(List<CenterData> centers) async {
-    final districtCode = [];
+    final districtCode = List<int>();
     //Do API call and other stuffs
     http.Response stateResponse = await ApiProvider.instance.getStates();
     if (stateResponse.statusCode == 200) {
@@ -27,15 +27,20 @@ class HomeRepo {
             districtsResponseFromJson(districtsResponse.body).districts;
 
         //filter district codes
-        for (CenterData centerData in centers) {
-          final districtId = districts
-              .firstWhere(
-                  (element) => element.districtName == centerData.districtName)
-              .districtId;
-          if (!districtCode.contains(districtId)) {
-            districtCode.add(districtId);
+        try{
+          for (CenterData centerData in centers) {
+            final districtId = districts
+                .firstWhere(
+                    (element) => element.districtName == centerData.districtName)
+                .districtId;
+            if (!districtCode.contains(districtId)) {
+              districtCode.add(districtId);
+            }
           }
+        }catch(e){
+          return districtCode;
         }
+
       }
     }
     return districtCode;

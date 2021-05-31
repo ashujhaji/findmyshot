@@ -28,9 +28,12 @@ class _HomePageState extends State<HomePage> {
   List<CenterData> _nearbyCenter = List();
   Alert _alert = Alert();
   bool _isAlertActive = false;
-  final _vaccines = ['Covaxin','Covishield','Sputnik V'];
-  final _price = ['All','Free','Paid'];
-  final _age = ['All','18+','45+'];
+  final _vaccines = ['Covaxin', 'Covishield', 'Sputnik V'];
+  final _price = ['All', 'Free', 'Paid'];
+  final _age = ['All', '18+', '45+'];
+  String _selectedVaccine = '';
+  String _selectedPrice = '';
+  String _selectedAge = '';
 
   @override
   void initState() {
@@ -42,11 +45,25 @@ class _HomePageState extends State<HomePage> {
         _isAlertActive = value.getBool(Constant.IS_ALERT_ACTIVE);
       });
     });
-    _getCreatedAlert().then((value) {
-      setState(() {
-        _alert = value;
+    if (_isAlertActive) {
+      _getCreatedAlert().then((value) {
+        setState(() {
+          _alert = value;
+          _selectedVaccine = _alert.vaccine;
+          _selectedAge = _alert.age;
+          _selectedPrice = _alert.price;
+        });
       });
-    });
+    } else {
+      _alert.vaccine = _vaccines[0];
+      _alert.age = _age[0];
+      _alert.price = _price[0];
+      setState(() {
+        _selectedVaccine = _vaccines[0];
+        _selectedAge = _age[0];
+        _selectedPrice = _price[0];
+      });
+    }
     if (_currentLat != 0.00 && _currentLong != 0.00) {
       _getAddress(_currentLat, _currentLong).then((value) {
         setState(() {
@@ -160,7 +177,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _createAlertWidget(BuildContext context) {
+  Widget _createAlertWidget(BuildContext mContext) {
     return Padding(
       padding: EdgeInsets.all(20),
       child: Container(
@@ -215,15 +232,10 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Text(
                       'Select Vaccine',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontWeight: FontWeight.w900,
-                          fontSize: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .fontSize),
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1.fontSize),
                     ),
                     flex: 1,
                   ),
@@ -232,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(top: 5, bottom: 5),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: _alert?.vaccine,
+                          value: _selectedVaccine,
                           isDense: true,
                           items: _vaccines.map((value) {
                             return DropdownMenuItem<String>(
@@ -243,17 +255,18 @@ class _HomePageState extends State<HomePage> {
                                     .textTheme
                                     .bodyText1
                                     .copyWith(
-                                    color: Colors.black,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .fontSize),
+                                        color: Colors.black,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .fontSize),
                               ),
                             );
                           }).toList(),
                           onChanged: (value) {
+                            _alert.vaccine = value;
                             setState(() {
-                              _alert.vaccine = value;
+                              _selectedVaccine = value;
                             });
                           },
                         ),
@@ -272,15 +285,10 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Text(
                       'Select Price',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontWeight: FontWeight.w900,
-                          fontSize: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .fontSize),
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1.fontSize),
                     ),
                     flex: 1,
                   ),
@@ -289,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(top: 5, bottom: 5),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: _alert?.price,
+                          value: _selectedPrice,
                           isDense: true,
                           items: _price.map((value) {
                             return DropdownMenuItem<String>(
@@ -300,17 +308,18 @@ class _HomePageState extends State<HomePage> {
                                     .textTheme
                                     .bodyText1
                                     .copyWith(
-                                    color: Colors.black,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .fontSize),
+                                        color: Colors.black,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .fontSize),
                               ),
                             );
                           }).toList(),
                           onChanged: (value) {
+                            _alert.price = value;
                             setState(() {
-                              _alert.price = value;
+                              _selectedPrice = value;
                             });
                           },
                         ),
@@ -329,15 +338,10 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Text(
                       'Select Age',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontWeight: FontWeight.w900,
-                          fontSize: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .fontSize),
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText1.fontSize),
                     ),
                     flex: 1,
                   ),
@@ -346,7 +350,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(top: 5, bottom: 5),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: _alert?.age,
+                          value: _selectedAge,
                           isDense: true,
                           items: _age.map((value) {
                             return DropdownMenuItem<String>(
@@ -357,17 +361,18 @@ class _HomePageState extends State<HomePage> {
                                     .textTheme
                                     .bodyText1
                                     .copyWith(
-                                    color: Colors.black,
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .fontSize),
+                                        color: Colors.black,
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .fontSize),
                               ),
                             );
                           }).toList(),
                           onChanged: (value) {
+                            _alert.age = value;
                             setState(() {
-                              _alert.age = value;
+                              _selectedAge = value;
                             });
                           },
                         ),
@@ -384,8 +389,8 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
                 onPressed: () {
-                  _createNewAlert().then((value){
-                    showSnackbar(context, 'New Alert Created');
+                  _createNewAlert().then((value) {
+                    showSnackbar(mContext, 'New Alert Created');
                   });
                 },
                 shape: RoundedRectangleBorder(
@@ -565,28 +570,40 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<CenterData>> _fetchLocalNearestCentres() async {
     final _pref = await SharedPreferences.getInstance();
+    _nearbyCenter.clear();
     _nearbyCenter.addAll(
         centerResponseFromJson(_pref.getString(Constant.NEARBY_CENTERS))
             .centers);
     final districtIds = await HomeRepo.instance.getDistrictIds(_nearbyCenter);
+    print(districtIds);
     _alert.districtId = districtIds;
     return _nearbyCenter;
   }
 
   Future<Alert> _getCreatedAlert() async {
     final _pref = await SharedPreferences.getInstance();
-    return alertFromJson(_pref.getString(Constant.CREATED_ALERT));
+    try {
+      return alertFromJson(_pref.getString(Constant.CREATED_ALERT));
+    } catch (e) {
+      return _alert;
+    }
   }
 
   Future<bool> _createNewAlert() async {
-    final reqJson = alertToJson(_alert);
-    SharedPreferences.getInstance().then((pref) {
-      pref.setString(Constant.CREATED_ALERT, reqJson);
-      pref.setBool(Constant.IS_ALERT_ACTIVE, true);
-    });
-    setState(() {
-      _isAlertActive = true;
-    });
-    return true;
+    try{
+      final reqJson = alertToJson(_alert);
+      print(reqJson);
+      SharedPreferences.getInstance().then((pref) {
+        pref.setString(Constant.CREATED_ALERT, reqJson);
+        pref.setBool(Constant.IS_ALERT_ACTIVE, true);
+      });
+      setState(() {
+        _isAlertActive = true;
+      });
+      return true;
+    }catch(e){
+      return false;
+    }
+
   }
 }
