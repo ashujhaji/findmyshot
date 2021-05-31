@@ -14,6 +14,11 @@ class ApiProvider {
   Future<http.Response> getStates() => http.get(ApiConstant.GET_STATES,
       headers: {ApiConstant.CONTENT_TYPE: ApiConstant.APPLICATION_JSON});
 
-  Future<http.Response> getDistrictsByStateId(stateId) => http.get('${ApiConstant.GET_DISTRICTS_BY_STATE}/$stateId',
-      headers: {ApiConstant.CONTENT_TYPE: ApiConstant.APPLICATION_JSON});
+  Future<http.Response> getDistrictsByStateId(stateId) =>
+      http.get('${ApiConstant.GET_DISTRICTS_BY_STATE}/$stateId',
+          headers: {ApiConstant.CONTENT_TYPE: ApiConstant.APPLICATION_JSON});
+
+  Future<http.Response> findSlotByDistrict(districtId, date) =>
+      http.get('${ApiConstant.FIND_SLOTS}?district_id=$districtId&date=$date',
+          headers: {ApiConstant.CONTENT_TYPE: ApiConstant.APPLICATION_JSON});
 }

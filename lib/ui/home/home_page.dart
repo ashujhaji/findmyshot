@@ -2,7 +2,6 @@ import 'package:findmyshot/model/alert.dart';
 import 'package:findmyshot/model/centers.dart';
 import 'package:findmyshot/ui/home/home_repo.dart';
 import 'package:findmyshot/util/constant.dart';
-import 'package:findmyshot/util/snackbar.dart';
 import 'package:findmyshot/util/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -78,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     Workmanager().initialize(callbackDispatcher);
 
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -91,7 +90,7 @@ class _HomePageState extends State<HomePage> {
       switch (task) {
         case PERIODIC_TASK:
           print('task triggered');
-         HomeRepo.instance.scheduleNotification(flutterLocalNotificationsPlugin);
+          HomeRepo.instance.findSlot(flutterLocalNotificationsPlugin);
           break;
       }
 

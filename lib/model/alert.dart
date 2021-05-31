@@ -22,7 +22,7 @@ class Alert {
   int qtyDose2;
 
   factory Alert.fromJson(Map<String, dynamic> json) => Alert(
-    districtId: List<dynamic>.from(json["district_id"].map((x) => x)),
+    districtId: List<int>.from(json["district_id"].map((x) => x)),
     vaccine: json["vaccine"],
     price: json["price"],
     age: json["age"],

@@ -7,6 +7,7 @@ class ApiConstant {
   static const GET_STATES = '$BASE_URL/api/v2/admin/location/states';
   static const GET_DISTRICTS_BY_STATE =
       '$BASE_URL/api/v2/admin/location/districts';
+  static const FIND_SLOTS = '$BASE_URL/api/v2/appointment/sessions/public/calendarByDistrict';
 
   static const CONTENT_TYPE = 'Content-Type';
   static const APPLICATION_JSON = "application/json";
