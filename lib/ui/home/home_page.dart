@@ -5,10 +5,12 @@ import 'package:findmyshot/util/constant.dart';
 import 'package:findmyshot/util/snackbar.dart';
 import 'package:findmyshot/util/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../../data/api/api_provider.dart';
 import '../../model/centers.dart';
@@ -21,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const PERIODIC_TASK = 'periodicTask';
   bool _isNewLocation = false;
   double _currentLat = 0.00;
   double _currentLong = 0.00;
@@ -34,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   String _selectedVaccine = '';
   String _selectedPrice = '';
   String _selectedAge = '';
+  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   @override
   void initState() {
@@ -71,6 +75,28 @@ class _HomePageState extends State<HomePage> {
         });
       });
     }
+    Workmanager().initialize(callbackDispatcher);
+
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  static void callbackDispatcher() {
+    Workmanager().executeTask((task, inputData) async {
+      switch (task) {
+        case PERIODIC_TASK:
+          print('task triggered');
+         HomeRepo.instance.scheduleNotification(flutterLocalNotificationsPlugin);
+          break;
+      }
+
+      return Future.value(true);
+    });
   }
 
   @override
@@ -390,7 +416,12 @@ class _HomePageState extends State<HomePage> {
                     EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
                 onPressed: () {
                   _createNewAlert().then((value) {
-                    showSnackbar(mContext, 'New Alert Created');
+                    Workmanager().registerPeriodicTask(
+                      "3",
+                      PERIODIC_TASK,
+                      initialDelay: Duration(seconds: 10),
+                      frequency: Duration(minutes: 30),
+                    );
                   });
                 },
                 shape: RoundedRectangleBorder(
@@ -590,7 +621,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> _createNewAlert() async {
-    try{
+    try {
       final reqJson = alertToJson(_alert);
       print(reqJson);
       SharedPreferences.getInstance().then((pref) {
@@ -601,9 +632,8 @@ class _HomePageState extends State<HomePage> {
         _isAlertActive = true;
       });
       return true;
-    }catch(e){
+    } catch (e) {
       return false;
     }
-
   }
 }

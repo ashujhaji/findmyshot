@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
 import '../../data/api/api_provider.dart';
@@ -45,4 +46,22 @@ class HomeRepo {
     }
     return districtCode;
   }
+
+
+  Future<void> scheduleNotification(FlutterLocalNotificationsPlugin plugin) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await plugin.show(
+      0,
+      'Vaccine slot available',
+      'We found a slot for you. Please check cowin.gov.in',
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+
 }
